@@ -13,10 +13,10 @@ const TrackDetail = (props) => {
   
     return (
         <div>
-          <h2>Name: {props.selectedTrack.name}</h2>
-          <h4>Age: {props.selectedTrack.age}</h4>
-          <h4>Breed: {props.selectedTrack.breed}</h4>
-          <p>{props.selectedTrack.name} is a {props.selectedTrack.age} year old {props.selectedTrack.breed}!</p>
+          <h2>{props.selectedTrack.title}</h2>
+          <img src={`${props.selectedTrack.cover_art_url}`} alt={`${props.selectedTrack.title}`} />
+          <h4>By {props.selectedTrack.artist}</h4>
+          <p>Released in {props.selectedTrack.release_year} in the album {props.selectedTrack.album}</p>
         </div>
       );
 
