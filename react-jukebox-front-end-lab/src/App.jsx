@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react'
 
 import * as trackService from './services/trackService' // The star imports EVERYTHING from the trackService file, think ahead of time
 
-import TrackList from './components/TrackList';
-import TrackDetail from './components/TrackDetail';
-import TrackForm from './components/TrackForm';
+import TrackList from './components/TrackList'
+import TrackDetail from './components/TrackDetail'
+import TrackForm from './components/TrackForm'
 
 
 import './App.css'
@@ -33,7 +33,7 @@ const App = () => {
         // call on the index function for an API call
         const tracks = await trackService.index()
         if (tracks.error) {
-          throw new Error(tracks.error);
+          throw new Error(tracks.error)
         }
 
         // Set trackList state to the returned tracks data
@@ -45,7 +45,7 @@ const App = () => {
       }
     }
     // invoke the function
-    fetchTracks();
+    fetchTracks()
 
     // add an empty dependency array to the `useEffect` hook.
   }, [])
@@ -54,23 +54,43 @@ const App = () => {
     setSelected(track)
   }
 
-  function handleFormView() {
+  /* If there is no track being shown in detail, assumes you want new track. Otherwise, update the shown track */
+
+  function handleFormView(track) {
+    if (!track.name) setSelected(null)
     setIsFormOpen(!isFormOpen)
   }
 
   async function handleAddTrack(formData) {
     try {
-      const newTrack = await trackService.create(formData);
+      const newTrack = await trackService.create(formData)
   
       if (newTrack.error) {
-        throw new Error(newTrack.error);
+        throw new Error(newTrack.error)
       }
   
-      setTrackList([newTrack, ...trackList]);
-      setIsFormOpen(false);
+      setTrackList([newTrack, ...trackList])
+      setIsFormOpen(false)
     } catch (error) {
       // Log the error to the console
-      console.log(error);
+      console.log(error)
+    }
+  }
+
+  async function handleUpdateTrack(formData, trackId) {
+    try {
+      const updatedTrack = await trackService.update(formData, trackId)
+  
+      if (updatedTrack.error) {
+        throw new Error(updatedTrack.error)
+      }
+  
+      setTrackList([updatedTrack, ...trackList])
+      setIsFormOpen(false)
+      setSelected(updatedTrack)
+    } catch (error) {
+      // Log the error to the console
+      console.log(error)
     }
   }
 
@@ -84,9 +104,9 @@ const App = () => {
   handleFormView={handleFormView}/>
   {/* IF/ELSE to determine if form view will be shown or not */}
   {isFormOpen ? (
-      <TrackForm handleAddTrack={handleAddTrack} />
+      <TrackForm handleAddTrack={handleAddTrack} handleUpdateTrack={handleUpdateTrack} selectedTrack={selected} />
     ) : (
-      <TrackDetail selectedTrack={selected} />
+      <TrackDetail selectedTrack={selected} handleFormView={handleFormView} />
     )}
   </>
 

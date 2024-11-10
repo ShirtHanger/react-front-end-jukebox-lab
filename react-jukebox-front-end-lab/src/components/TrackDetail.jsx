@@ -13,14 +13,15 @@ const TrackDetail = (props) => {
   
     return (
         <div>
+          <button onClick={() => props.handleFormView(props.selectedTrack)}>Edit</button>
           <h2>{props.selectedTrack.title}</h2>
           <img src={`${props.selectedTrack.cover_art_url}`} alt={`${props.selectedTrack.title}`} />
           <h4>By {props.selectedTrack.artist}</h4>
           <p>Released in {props.selectedTrack.release_year} in the album {props.selectedTrack.album}</p>
         </div>
-      );
+      )
 
-};
+}
   
 
 export default TrackDetail

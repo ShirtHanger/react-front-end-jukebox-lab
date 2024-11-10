@@ -23,9 +23,9 @@ const TrackList = (props) => {
                 {props.isFormOpen ? 'Close Form' : 'New Track'}
             </button>
         </div>
-      );
+      )
 
-};
+}
   
 
 export default TrackList

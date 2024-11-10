@@ -1,35 +1,46 @@
 // src/components/TrackForm.jsx
 
-import { useState } from 'react';
+import { useState } from 'react'
 
 const TrackForm = (props) => {
-  // formData state to control the form
-  const [formData, setFormData] = useState({
+
+  const initialState = {
     title: '',
     album: '',
     artist: '',
     release_year: '',
     genre: '',
     cover_art_url: '',
-  });
+  }
+
+  // formData state to control the form
+  // If track data has been passed as props, we set formData as that track object.
+  // Otherwise, we can assume this is a new track form, and use the empty initialState object.
+  const [formData, setFormData] = useState(props.selectedTrack ? props.selectedTrack : initialState)
 
   // handleChange function to update formData state
   const handleChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
-  };
+    setFormData({ ...formData, [event.target.name]: event.target.value })
+  }
 
   const handleSubmitForm = (event) => {
-    event.preventDefault();
-    props.handleAddTrack(formData);
-    setFormData({
-      title: '',
-      album: '',
-      artist: '',
-      release_year: '',
-      genre: '',
-      cover_art_url: '',
-    });
-  };
+    event.preventDefault()
+    if (props.selectedTrack) { /* If a specific track was selected, update that track with form data */
+      props.handleUpdateTrack(formData, props.selectedTrack._id)
+    } else { /* Otherwise, add a new track to the database */
+      props.handleAddTrack(formData) 
+    }
+
+    
+    // setFormData({
+    //   title: '',
+    //   album: '',
+    //   artist: '',
+    //   release_year: '',
+    //   genre: '',
+    //   cover_art_url: '',
+    // })
+  }
 
   return (
     <div>
@@ -77,10 +88,12 @@ const TrackForm = (props) => {
           value={formData.cover_art_url}
           onChange={handleChange}
         />
-        <button type="submit" onClick={handleSubmitForm}>Add New Track</button>
+        <button type="submit" onClick={handleSubmitForm}> {props.selectedTrack ? 'Update Track' : 'Add New Track'} </button> {/* UI feedback */}
+        {/* Lets user know, update or new track. Based on if a track is being shown in detail already */}
+        {/* Not updating for some reason */}
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default TrackForm;
+export default TrackForm
