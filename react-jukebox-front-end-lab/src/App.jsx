@@ -94,19 +94,44 @@ const App = () => {
     }
   }
 
+  async function handleDeleteTrack(trackId) {
+    try {
+      const deletedTrack = await trackService.deleteTrack(trackId)
+  
+      if (deletedTrack.error) {
+        throw new Error(deletedTrack.error)
+      }
+
+      /* Using filter to create new track array that EXCLUDES the track that was targetted for deletion, 
+      by excluding any object with the Id of the target's ID */
+  
+      setTrackList(trackList.filter(track => 
+        track._id !== deletedTrack._id
+      ))
+
+      setSelected(null)
+      setIsFormOpen(false)
+    } catch (error) {
+      // Log the error to the console
+      console.log(error)
+    }
+  }
+
+  
+
   return (
 
   <>
-  <h1>The best tracks of all time!</h1>
+  <h1>The best playlist in the universe!</h1>
   <TrackList 
   trackList={trackList}
   updateSelectedTrack={updateSelectedTrack}
   handleFormView={handleFormView}/>
   {/* IF/ELSE to determine if form view will be shown or not */}
   {isFormOpen ? (
-      <TrackForm handleAddTrack={handleAddTrack} handleUpdateTrack={handleUpdateTrack} selectedTrack={selected} />
+      <TrackForm handleAddTrack={handleAddTrack} handleUpdateTrack={handleUpdateTrack} selectedTrack={selected}/>
     ) : (
-      <TrackDetail selectedTrack={selected} handleFormView={handleFormView} />
+      <TrackDetail selectedTrack={selected} handleFormView={handleFormView} handleDeleteTrack={handleDeleteTrack} />
     )}
   </>
 

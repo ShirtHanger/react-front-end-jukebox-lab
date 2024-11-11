@@ -13,11 +13,12 @@ const TrackDetail = (props) => {
   
     return (
         <div>
-          <button onClick={() => props.handleFormView(props.selectedTrack)}>Edit</button>
           <h2>{props.selectedTrack.title}</h2>
           <img src={`${props.selectedTrack.cover_art_url}`} alt={`${props.selectedTrack.title}`} />
           <h4>By {props.selectedTrack.artist}</h4>
           <p>Released in {props.selectedTrack.release_year} in the album {props.selectedTrack.album}</p>
+          <button onClick={() => props.handleFormView(props.selectedTrack)}>Edit info on {props.selectedTrack.title}</button>
+          <button onClick={() => props.handleDeleteTrack(props.selectedTrack._id)}>Purchase {props.selectedTrack.title}</button>
         </div>
       )
 

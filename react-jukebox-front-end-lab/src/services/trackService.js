@@ -43,6 +43,20 @@ const update = async (formData, trackId) => {
   }
 }
 
+// DELETE - Deletes a track from the database!
+  /* It told me 'delete' wasn't a valid function name */
+
+const deleteTrack = async (trackId) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/${trackId}`) 
+    console.log(response)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 // Can only export one thing
 // Get around it by nesting them all in objects
-export { index, create, update }
+export { index, create, update, deleteTrack }
+
