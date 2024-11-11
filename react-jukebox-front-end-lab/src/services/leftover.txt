@@ -1,10 +1,4 @@
-// src/components/TrackForm.jsx
-
-import { useState } from 'react'
-
-const TrackForm = (props) => {
-
-  const initialState = {
+const initialState = {
     title: '',
     album: '',
     artist: '',
@@ -13,37 +7,11 @@ const TrackForm = (props) => {
     cover_art_url: '',
   }
 
-  // formData state to control the form
-  // If track data has been passed as props, we set formData as that track object.
-  // Otherwise, we can assume this is a new track form, and use the empty initialState object.
-  const [formData, setFormData] = useState(props.selectedTrack ? props.selectedTrack : initialState)
-
-  // handleChange function to update formData state
-  const handleChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value })
-  }
-
-  const handleSubmitForm = (event) => {
-    event.preventDefault()
-    if (props.selectedTrack) { /* If a specific track was selected, update that track with form data */
-      props.handleUpdateTrack(formData, props.selectedTrack._id)
-    } else { /* Otherwise, add a new track to the database */
-      props.handleAddTrack(formData) 
-    }
-    // initialState makes this no longer needed... i guess
-    // setFormData({
-      // title: '',
-      // album: '',
-      // artist: '',
-      // release_year: '',
-      // genre: '',
-      // cover_art_url: '',})
-  }
 
   return (
     <div>
       <form>
-      <label htmlFor="title"> Title </label>
+        <label htmlFor="title"> Title </label>
         <input
           id="title"
           name="title"
@@ -92,6 +60,3 @@ const TrackForm = (props) => {
       </form>
     </div>
   )
-}
-
-export default TrackForm
