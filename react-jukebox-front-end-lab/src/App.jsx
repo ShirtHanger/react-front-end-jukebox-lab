@@ -10,15 +10,13 @@ import TrackForm from './components/TrackForm'
 
 import './App.css'
 
-// src/App.jsx
-
 const App = () => {
 
   /* Track list states */
   const [trackList, setTrackList] = useState([]) // Initially empty
 
 
-  /* Variable for a selected track and form */
+  // Variable for a selected track and form
   const [selected, setSelected] = useState(null) // Initially null 
   const [isFormOpen, setIsFormOpen] = useState(false)
   /* useState is being used as a workaround since this specific app isn't using ROUTES */
@@ -31,7 +29,7 @@ const App = () => {
 
       try {
         // call on the index function for an API call
-        const tracks = await trackService.index()
+        const tracks = await trackService.indexTracks()
         if (tracks.error) {
           throw new Error(tracks.error)
         }
@@ -57,39 +55,50 @@ const App = () => {
   /* If there is no track being shown in detail, assumes you want new track. Otherwise, update the shown track */
 
   function handleFormView(track) {
-    if (!track.name) setSelected(null)
+    if (!track.title) setSelected(null)
     setIsFormOpen(!isFormOpen)
   }
 
+  /* Adds new track to database. */
   async function handleAddTrack(formData) {
-    try {
-      const newTrack = await trackService.create(formData)
+    try { // Summons axios function from trackService.js
+      const newTrack = await trackService.createTrack(formData)
   
       if (newTrack.error) {
         throw new Error(newTrack.error)
       }
-  
+
+      // Updates track list to include new track
       setTrackList([newTrack, ...trackList])
+      // Close form
       setIsFormOpen(false)
     } catch (error) {
-      // Log the error to the console
+      // error handling
       console.log(error)
     }
   }
 
   async function handleUpdateTrack(formData, trackId) {
     try {
-      const updatedTrack = await trackService.update(formData, trackId)
+      const updatedTrack = await trackService.updateTrack(formData, trackId)
   
       if (updatedTrack.error) {
         throw new Error(updatedTrack.error)
       }
   
-      setTrackList([updatedTrack, ...trackList])
-      setIsFormOpen(false)
+      const updatedTrackList = trackList.map((track) =>
+        // If the id of the current track is not the same as the updated track's id, return the existing track. If the id's match, instead return the updated track.
+        track._id !== updatedTrack._id ? track : updatedTrack
+      )
+      // Set trackList state to this updated array
+      setTrackList(updatedTrackList)
+
+      // If we don't set selected to the updated track object, the details page will reference outdated data until the page reloads.
       setSelected(updatedTrack)
+      setIsFormOpen(false)
+
     } catch (error) {
-      // Log the error to the console
+      // error handling
       console.log(error)
     }
   }
@@ -104,6 +113,8 @@ const App = () => {
 
       /* Using filter to create new track array that EXCLUDES the track that was targetted for deletion, 
       by excluding any object with the Id of the target's ID */
+
+      
   
       setTrackList(trackList.filter(track => 
         track._id !== deletedTrack._id
@@ -111,8 +122,9 @@ const App = () => {
 
       setSelected(null)
       setIsFormOpen(false)
+
     } catch (error) {
-      // Log the error to the console
+      // error handling
       console.log(error)
     }
   }
@@ -122,17 +134,22 @@ const App = () => {
   return (
 
   <>
-  <h1>The best playlist in the universe!</h1>
-  <TrackList 
-  trackList={trackList}
-  updateSelectedTrack={updateSelectedTrack}
-  handleFormView={handleFormView}/>
-  {/* IF/ELSE to determine if form view will be shown or not */}
-  {isFormOpen ? (
-      <TrackForm handleAddTrack={handleAddTrack} handleUpdateTrack={handleUpdateTrack} selectedTrack={selected}/>
-    ) : (
-      <TrackDetail selectedTrack={selected} handleFormView={handleFormView} handleDeleteTrack={handleDeleteTrack} />
-    )}
+    <h1>My favorite tracks</h1>
+      <TrackList 
+      trackList={trackList}
+      updateSelectedTrack={updateSelectedTrack}
+      handleFormView={handleFormView}
+      isFormOpen={isFormOpen} /* Allows "Open/Close form" to conditionally render */
+      />
+
+      {/* IF/ELSE to determine if form view will be shown or not */}
+      
+      {isFormOpen ? (
+
+          <TrackForm handleAddTrack={handleAddTrack} handleUpdateTrack={handleUpdateTrack} selectedTrack={selected}/>
+        ) : (
+          <TrackDetail selectedTrack={selected} handleFormView={handleFormView} handleDeleteTrack={handleDeleteTrack} />
+        )}
   </>
 
   )
@@ -140,4 +157,3 @@ const App = () => {
 
 
 export default App
-
