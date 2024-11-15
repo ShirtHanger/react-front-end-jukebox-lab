@@ -3,7 +3,6 @@ import axios from "axios"
 /* The attached VITE URL is pulled from the .env file */
 /* This format is good because it is interchangeable! */
 const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/tracks`
-// src/services/trackService.js
 
 /* Functions to make API pulls */
 

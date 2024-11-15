@@ -6,6 +6,7 @@ import * as trackService from './services/trackService' // The star imports EVER
 import TrackList from './components/TrackList'
 import TrackDetail from './components/TrackDetail'
 import TrackForm from './components/TrackForm'
+import NowPlaying from './components/NowPlaying'
 
 
 import './App.css'
@@ -18,6 +19,7 @@ const App = () => {
 
   // Variable for a selected track and form
   const [selected, setSelected] = useState(null) // Initially null 
+  const [playing, setPlaying] = useState(null) // Initially null 
   const [isFormOpen, setIsFormOpen] = useState(false)
   /* useState is being used as a workaround since this specific app isn't using ROUTES */
 
@@ -50,6 +52,11 @@ const App = () => {
 
   function updateSelectedTrack(track) {
     setSelected(track)
+  }
+
+  function updatePlayingTrack(track) {
+    console.log(`Now playing: ${track.title} (${track._id})`)
+    setPlaying(track)
   }
 
   /* If there is no track being shown in detail, assumes you want new track. Otherwise, update the shown track */
@@ -138,9 +145,15 @@ const App = () => {
       <TrackList 
       trackList={trackList}
       updateSelectedTrack={updateSelectedTrack}
+      handleUpdateTrack={handleUpdateTrack}
+      handleDeleteTrack={handleDeleteTrack}
       handleFormView={handleFormView}
+      updatePlayingTrack={updatePlayingTrack}
       isFormOpen={isFormOpen} /* Allows "Open/Close form" to conditionally render */
       />
+
+      <NowPlaying
+      playingTrack={playing}/>
 
       {/* IF/ELSE to determine if form view will be shown or not */}
       
